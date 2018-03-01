@@ -102,10 +102,32 @@ install_yarn() {
 
 install_and_cache_deps() {
   info "Installing and caching node modules"
+
+  echo "================= DEBUG =============================="
+  echo "    build_dir:  $build_dir"
+  echo "    cache_dir:  $cache_dir"
+  echo "    env_dir:    $env_dir"
+  echo "    assets_dir: $assets_dir"
+  echo " "
+  echo "    ls -ld assets dir"
+  ls -ld $assets_dir
+  echo "    ls -ld ./deps/phoenix"
+  ls -ld ./deps/phoenix
+  echo "------------------------------------------------------------"
+  echo "   env"
+  env
+  echo "------------------------------------------------------------"
   cd $assets_dir
+
   if [ -d $cache_dir/node_modules ]; then
+    echo "---------- making node_modules"
     mkdir -p node_modules
     cp -r $cache_dir/node_modules/* node_modules/
+
+    echo "====================================="
+    echo "---------- ls -ld node_modules/ph*"
+    ls -ld node_modules/ph* || true
+    echo "====================================="
   fi
 
   if [ -f "$assets_dir/yarn.lock" ]; then
@@ -114,9 +136,43 @@ install_and_cache_deps() {
     install_npm_deps
   fi
 
+  info "ls $PWD:   is node_modules here?"
+
+  echo "----- cache_dir: $cache_dir"
+  ls -ld $cache_dir
+
+  echo " "
+  echo "------------------------------------------------------------"
+  echo "------------------------------------------------------------"
+  echo "   PWD: $PWD"
+  echo "   ls -ld node_modules :"
+  ls -ld node_modules
+  echo "   ls -ld cache_dir: $cache_dir :"
+  ls -ld $cache_dir
+  echo "------------------------------------------------------------"
+
+
+  echo " "
+  echo "------------------------------------------------------------"
+  echo "  ls -ld ./node_modules/phoenix :"
+  ls -ld ./node_modules/phoenix
+  ls -lF ./node_modules/phoenix
+  echo "  ls -ld ./node_modules/phoenix_html"
+  ls -ld ./node_modules/phoenix_html
+  ls -lF ./node_modules/phoenix_html
+  echo "------------------------------------------------------------"
+
+  echo "------------------------------------------------------------"
+  echo "    ls -l .."
+  echo ls -l ..
+  echo "------------------------------------------------------------"
+
+  set -x
   cp -r node_modules $cache_dir
   PATH=$assets_dir/node_modules/.bin:$PATH
+  set +x
   install_bower_deps
+
 }
 
 install_npm_deps() {
